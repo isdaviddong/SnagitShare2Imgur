@@ -33,11 +33,19 @@ namespace SnagitShare2Imgur
                 return;
             }
 
+            //if only one parameter and suppose it's filename
             if (_args.Length == 1)
             {
-                //show help
-                upload(_args[0].Trim().ToLower());
-                return;
+                //get filename
+                var filename = _args[0].Trim().ToLower();
+                //get ext name
+                var ext = System.IO.Path.GetExtension(filename).ToLower();
+                if (ext != ".png" && ext != ".jpg" && ext != ".jepg" && ext != ".gif" && ext != ".mp4")
+                {
+                    //if valid format
+                    upload(_args[0].Trim().ToLower());
+                    return;
+                }
             }
 
             //get first argument
