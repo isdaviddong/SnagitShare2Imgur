@@ -9,12 +9,12 @@
     <PackageOutputPath>./nupkg</PackageOutputPath>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageId>SnagitShare2Imgur</PackageId>
-    <Version>1.0.2</Version>
+    <Version>1.0.3</Version>
     <Authors>David Tung(LAE, MVP)</Authors>
     <Company>isRock LTD.</Company>
     <Product>LINE CLI</Product>
-    <AssemblyVersion>1.0.2.0</AssemblyVersion>
-    <FileVersion>1.0.2.0</FileVersion>
+    <AssemblyVersion>1.0.3.0</AssemblyVersion>
+    <FileVersion>1.0.3.0</FileVersion>
     <Description>cli tool for uplaod image to Imgur with Snagit share feature</Description>
     <AssemblyName>SnagitShare2Imgur</AssemblyName>
     <RootNamespace>SnagitShare2Imgur</RootNamespace>
