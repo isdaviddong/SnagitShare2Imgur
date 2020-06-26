@@ -40,7 +40,7 @@ namespace SnagitShare2Imgur
                 var filename = _args[0].Trim().ToLower();
                 //get ext name
                 var ext = System.IO.Path.GetExtension(filename).ToLower();
-                if (ext != ".png" && ext != ".jpg" && ext != ".jepg" && ext != ".gif" && ext != ".mp4")
+                if (ext == ".png" || ext == ".jpg" || ext == ".jepg" || ext == ".gif" || ext == ".mp4")
                 {
                     //if valid format
                     upload(_args[0].Trim().ToLower());
