@@ -33,7 +33,7 @@ namespace SnagitShare2Imgur
                 return;
             }
 
-            //if only one parameter and suppose it's filename
+            //if only one parameter and suppose it's filename which 
             if (_args.Length == 1)
             {
                 //get filename
@@ -69,32 +69,50 @@ namespace SnagitShare2Imgur
 
         static private void upload(string FileName2Upload)
         {
-            var ImgurClientID = Utility.getImgurClientID();
-            if (string.IsNullOrEmpty(ImgurClientID))
+            var JSON = "";
+            try
             {
-                Console.WriteLine("Missing ImgurClientID.");
-                return;
-            }
-            // file exist?
-            if (!System.IO.File.Exists(FileName2Upload))
-            {
-                Console.WriteLine($"file {FileName2Upload} is not exist.");
-                return;
-            }
-            // check file type
-            var ext = System.IO.Path.GetExtension(FileName2Upload).ToLower();
-            if (ext != ".png" && ext != ".jpg" && ext != ".jepg" && ext != ".gif" && ext != ".mp4")
-            {
-                Console.WriteLine($"file type {ext} is invalid.");
-                return;
-            }
-            Console.WriteLine($"file {FileName2Upload} uploading...");
+                var ImgurClientID = Utility.getImgurClientID();
+                if (string.IsNullOrEmpty(ImgurClientID))
+                {
+                    Console.WriteLine("Missing ImgurClientID.");
+                    return;
+                }
+                // file exist?
+                if (!System.IO.File.Exists(FileName2Upload))
+                {
+                    Console.WriteLine($"file {FileName2Upload} is not exist.");
+                    return;
+                }
+                // check file type
+                var ext = System.IO.Path.GetExtension(FileName2Upload).ToLower();
+                if (ext != ".png" && ext != ".jpg" && ext != ".jepg" && ext != ".gif" && ext != ".mp4")
+                {
+                    Console.WriteLine($"file type {ext} is invalid.");
+                    return;
+                }
+                Console.WriteLine($"reading file '{FileName2Upload}' ...");
 
-            var FileBody = System.IO.File.ReadAllBytes(FileName2Upload);
-            var ret = Utility.UploadImage2Imgur(ImgurClientID, FileBody);
-            var JSON = Newtonsoft.Json.JsonConvert.SerializeObject(ret);
-            TextCopy.ClipboardService.SetText((string)ret.data.link);
-            Console.WriteLine($"status: file {FileName2Upload} has been uploaded to {ret.data.link}");
+                var FileBody = System.IO.File.ReadAllBytes(FileName2Upload);
+                Console.WriteLine($"uploading ...");
+                dynamic ret;
+                if (ext != ".mp4")
+                    ret = Utility.UploadImage2Imgur(ImgurClientID, FileBody);
+                else
+                    ret = Utility.UploadMp42Imgur(ImgurClientID, FileBody);
+                JSON = Newtonsoft.Json.JsonConvert.SerializeObject(ret);
+                Console.WriteLine($"uploaded. JSON:{JSON}");
+                TextCopy.ClipboardService.SetText((string)ret.data.link);
+                Console.WriteLine($"status: file {FileName2Upload} has been uploaded to {ret.data.link}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error : {ex.Message}");
+                Console.WriteLine($"Press any key to continue...");
+                Console.ReadKey();
+                throw ex;
+            }
+
         }
 
         static private void upload(string[] args, Options o)

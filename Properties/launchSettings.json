@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "SnagitShare2Imgur": {
+      "commandName": "Project",
+      "commandLineArgs": "D:\\SNAG-0001.mp4 "
+    }
+  }
+}

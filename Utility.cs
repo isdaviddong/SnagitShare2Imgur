@@ -58,5 +58,32 @@ namespace SnagitShare2Imgur
             //DeserializeObject with dynamic data type 
             return Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(JSON);
         }
+
+        static internal dynamic UploadMp42Imgur(string ImgurClientID, byte[] FileBody)
+        {
+            HttpClient client = new HttpClient();
+            string uriBase = "https://api.imgur.com/3/upload";
+
+            // Request headers.
+            client.DefaultRequestHeaders.Add(
+                "Authorization", $"Client-ID {ImgurClientID}");
+
+            string uri = uriBase;
+
+            HttpResponseMessage response;
+
+
+            using var form = new MultipartFormDataContent();
+            using var fileContent = new ByteArrayContent(FileBody);
+            fileContent.Headers.ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse("multipart/form-data");
+            form.Add(fileContent, "video", "file.mp4");
+
+            response = client.PostAsync(uri, form).Result;
+
+            // Asynchronously get the JSON response.
+            string JSON = response.Content.ReadAsStringAsync().Result;
+            //DeserializeObject with dynamic data type 
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(JSON);
+        }
     }
 }
