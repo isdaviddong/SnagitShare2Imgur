@@ -8,6 +8,11 @@ using System.IO;
 
 namespace SnagitShare2Imgur
 {
+    public enum OutputType
+    {
+        url, markdown, html
+    }
+
     public class Utility
     {
         static internal string getImgurClientID()

@@ -16,6 +16,10 @@ namespace SnagitShare2Imgur
             [Option('f', "File", Required = false, HelpText = "File Path to Upload")]
             public string FilePath { get; set; }
 
+
+            [Option('o', "Output", Required = false, HelpText = "Output Type")]
+            public string outputType { get; set; }
+
             //public string GetUsage()
             //{
             //    return CommandLine.Text.HelpText.AutoBuild(this,
@@ -43,7 +47,7 @@ namespace SnagitShare2Imgur
                 if (ext == ".png" || ext == ".jpg" || ext == ".jepg" || ext == ".gif" || ext == ".mp4")
                 {
                     //if valid format
-                    upload(_args[0].Trim().ToLower());
+                    upload(_args[0].Trim().ToLower(), OutputType.url);
                     return;
                 }
             }
@@ -67,7 +71,7 @@ namespace SnagitShare2Imgur
             return;
         }
 
-        static private void upload(string FileName2Upload)
+        static private void upload(string FileName2Upload, OutputType outputType)
         {
             var JSON = "";
             try
@@ -102,7 +106,12 @@ namespace SnagitShare2Imgur
                     ret = Utility.UploadMp42Imgur(ImgurClientID, FileBody);
                 JSON = Newtonsoft.Json.JsonConvert.SerializeObject(ret);
                 Console.WriteLine($"uploaded. JSON:{JSON}");
-                TextCopy.ClipboardService.SetText((string)ret.data.link);
+                if (outputType == OutputType.url)
+                    TextCopy.ClipboardService.SetText((string)ret.data.link);
+                if (outputType == OutputType.markdown)
+                    TextCopy.ClipboardService.SetText($"![]({(string)ret.data.link})");
+                if (outputType == OutputType.html)
+                    TextCopy.ClipboardService.SetText($"<img src='{(string)ret.data.link}' />");
                 Console.WriteLine($"status: file {FileName2Upload} has been uploaded to {ret.data.link}");
             }
             catch (Exception ex)
@@ -117,7 +126,7 @@ namespace SnagitShare2Imgur
 
         static private void upload(string[] args, Options o)
         {
-            upload(o.FilePath);
+            upload(o.FilePath, Enum.Parse<OutputType>(o.outputType));
         }
 
         //set up 
